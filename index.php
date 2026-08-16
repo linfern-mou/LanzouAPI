@@ -81,6 +81,9 @@ if(strpos($softInfo, "function down_p(){") != false  && empty($webpage)) {
 	preg_match_all("~'sign':'(.*?)',~", $softInfo, $segment);
 	preg_match_all("~ajaxdata = '(.*?)'~", $softInfo, $signs);
 	preg_match_all("~(?:^|/)(ajax(?:m|file)\.php\?file=\d+)~", $softInfo, $ajaxm);
+	if(empty($segment[1][1])) {
+		preg_match_all("~var\\s+isngis\\s*=\\s*'(.*?)';~", $softInfo, $segment);
+	}
 	$post_data = array(
 		"action" => "downprocess",
 		"sign" => $segment[1][1],
@@ -216,6 +219,8 @@ function MloocCurlGet($url = '', $UserAgent = '', $cookie = '', $referer = '') {
 	    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 	#返回数据不直接显示
 	    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 15);
+	curl_setopt($curl, CURLOPT_TIMEOUT, 30);
 	$response = curl_exec($curl);
 	curl_close($curl);
 	return $response;
@@ -237,6 +242,8 @@ function MloocCurlPost($post_data = '', $url = '', $ifurl = '', $UserAgent = '',
 	    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($curl, CURLOPT_POST, 1);
 	curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data);
+	curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 15);
+	curl_setopt($curl, CURLOPT_TIMEOUT, 30);
 	$response = curl_exec($curl);
 	curl_close($curl);
 	return $response;
